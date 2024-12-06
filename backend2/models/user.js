@@ -15,6 +15,14 @@ const userSchema = Schema({
     phoneNumber: {
         type: Number,
         required:[true, "este campo es obligatorio"]
+    },
+    password: {
+        type: String,
+        required:[true, "este campo es obligatorio"]
+    },
+    admin: {
+        type: Boolean,
+        default: false
     }
 });
 

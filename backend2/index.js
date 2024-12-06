@@ -6,7 +6,6 @@ const petsRouter = require("./routes/pets");
 const usersRouter = require("./routes/users");
 const shiftsRouter = require("./routes/shifts");
 require("dotenv").config();
-console.log(process.env.MONGODB_CNN);
 const {dbConnection} = require("./database/config");
 
 
