@@ -4,9 +4,20 @@ const shiftSchema = Schema({
         type:String,
         required:[true, "este campo es obligatorio"]
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     pet: {
-        type:String,
-        required:[true, "este campo es obligatorio"]
+        type: Schema.Types.ObjectId,
+        ref: "Pet",
+        required: true
+    },
+    service: {
+        type: Schema.Types.ObjectId,
+        ref: "Service",
+        required: true
     },
     date: {
         type:String,

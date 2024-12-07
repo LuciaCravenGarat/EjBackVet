@@ -13,7 +13,11 @@ const get = async (req, res) => {
 const getOne = async (req, res) => {
   let { id } = req.params;
   try {
-    let shift = await Shift.findById({ _id: id });
+    let shift = await Shift.findById({ _id: id })
+      .populate("user", "name lastName")
+      .populate("pet", "name specie race")
+      .populate("service", "name");
+    if (!shift) return res.status(404).json({ message: "Turno no encontrado" });
     return res.status(200).json({ shift });
   } catch (error) {
     console.log("ha ocurrido un error:", error);

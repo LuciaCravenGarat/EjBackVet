@@ -1,14 +1,6 @@
 const {Schema, model} = require("mongoose");
-const petSchema = Schema({
+const productSchema = Schema({
     name: {
-        type:String,
-        required:[true, "este campo es obligatorio"]
-    },
-    specie: {
-        type:String,
-        required:[true, "este campo es obligatorio"]
-    },
-    race: {
         type:String,
         required:[true, "este campo es obligatorio"]
     },
@@ -16,11 +8,10 @@ const petSchema = Schema({
         type:String,
         required:[true, "este campo es obligatorio"]
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+    detail: {
+        type:String,
+        required:[true, "este campo es obligatorio"]
     }
 });
 
-module.exports=model("Pet", petSchema)
+module.exports=model("Product", productSchema)

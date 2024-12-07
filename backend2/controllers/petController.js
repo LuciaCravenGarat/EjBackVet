@@ -1,6 +1,4 @@
 const Pet = require("../models/pet");
-//let pets = [];
-//let id = 0;
 
 const get = async (req, res) => {
   try {
@@ -15,7 +13,7 @@ const get = async (req, res) => {
 const getOne = async (req, res) => {
   let { id } = req.params;
   try {
-    let pet = await Pet.findById({ _id: id });
+    let pet = await Pet.findById({ _id: id }).populate("User", "name lastName");
     return res.status(200).json({ pet });
   } catch (error) {
     console.log("ha ocurrido un error:", error);
