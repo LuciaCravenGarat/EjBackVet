@@ -1,4 +1,7 @@
 const Shift = require("../models/shift");
+const User = require("../models/user");
+const Pet = require("../models/pet");
+const Service = require("../models/service");
 
 const get = async (req, res) => {
   try {
@@ -13,7 +16,7 @@ const get = async (req, res) => {
 const getOne = async (req, res) => {
   let { id } = req.params;
   try {
-    let shift = await Shift.findById({ _id: id })
+    let shift = await Shift.findById(id)
       .populate("user", "name lastName")
       .populate("pet", "name specie race")
       .populate("service", "name");
@@ -27,8 +30,32 @@ const getOne = async (req, res) => {
 
 const create = async (req, res) => {
   const shift = req.body;
-  const newShift = new Shift(shift);
+
   try {
+    const [userExists, petExists, serviceExists] = await Promise.all([
+      User.findById(shiftData.user),
+      Pet.findById(shiftData.pet),
+      Service.findById(shiftData.service),
+    ]);
+
+    if (!userExists) {
+      return res
+        .status(404)
+        .json({ error: "El usuario proporcionado no existe" });
+    }
+
+    if (!petExists) {
+      return res
+        .status(404)
+        .json({ error: "La mascota proporcionada no existe" });
+    }
+
+    if (!serviceExists) {
+      return res
+        .status(404)
+        .json({ error: "El servicio proporcionado no existe" });
+    }
+    const newShift = new Shift(shift);
     await newShift.save();
     return res
       .status(201)
@@ -36,6 +63,51 @@ const create = async (req, res) => {
   } catch (error) {
     console.log("ha ocurrido un error:", error);
     return res.status(500).json({ error: "Error al crear turno" });
+  }
+};
+
+const createFullShift = async (req, res) => {
+  const { user, pet, shift } = req.body;
+
+  if (!user || !pet || !shift) {
+    return res
+      .status(400)
+      .json({ error: "Faltan datos obligatorios (usuario, mascota o turno)" });
+  }
+
+  try {
+    let existingUser = await User.findOne({ email: user.email });
+
+    if (!existingUser) {
+      const newUser = new User(user);
+      await newUser.save();
+      existingUser = newUser;
+    }
+
+    const newPet = new Pet({ ...pet, owner: existingUser._id });
+    await newPet.save();
+
+    const newShift = new Shift({
+      ...shift,
+      user: existingUser._id,
+      pet: newPet._id,
+    });
+
+    await newShift.save();
+
+    return res.status(201).json({
+      message: "Turno creado con éxito",
+      user: existingUser,
+      pet: newPet,
+      shift: newShift,
+    });
+  } catch (error) {
+    console.error("Error al crear el turno completo:", error);
+    return res
+      .status(500)
+      .json({
+        error: "Error al crear el turno completo, por favor intente más tarde",
+      });
   }
 };
 
@@ -67,6 +139,7 @@ module.exports = {
   get,
   getOne,
   create,
+  createFullShift,
   update,
   del,
 };

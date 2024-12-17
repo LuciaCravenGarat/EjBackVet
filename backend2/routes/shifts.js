@@ -12,6 +12,8 @@ router.get("/:id", getOne);
 router.post("/", [ //cambio a verificar para adaptar al formato dropdown, fecha y hora en el front
     check("vet", "Este campo es obligatorio").notEmpty(),
     check("pet", "Este campo es obligatorio").notEmpty(),
+    check("user", "Este campo es obligatorio").notEmpty(),
+    check("service", "Este campo es obligatorio").notEmpty(),
     check("time", "Este campo es obligatorio").notEmpty(), //sólo habilitados los horarios disponibles
     check("date", "Este campo es obligatorio").notEmpty(), //deshabilitar fechas anteriores a la actual
     check("detail", "Este campo es obligatorio").notEmpty(),

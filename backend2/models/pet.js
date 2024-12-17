@@ -12,6 +12,10 @@ const petSchema = Schema({
         type:String,
         required:[true, "este campo es obligatorio"]
     },
+    age: {
+        type:Number,
+        required:[true, "este campo es obligatorio"]
+    },
     src: {
         type:String,
         required:[true, "este campo es obligatorio"]
